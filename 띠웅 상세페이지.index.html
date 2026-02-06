@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>띠웅 시티투어 : 서울 한바퀴 | Digital Play Kit</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Jua for the 'Hip/Cute' headline feel, Noto Sans KR for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind Config for Custom Colors/Fonts -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'jua': ['"Jua"', 'sans-serif'],
+                        'sans': ['"Noto Sans KR"', 'sans-serif'],
+                    },
+                    colors: {
+                        'dd-yellow': '#FFEB3B',
+                        'dd-blue': '#3B82F6',
+                        'dd-pink': '#F472B6',
+                        'dd-dark': '#18181B',
+                    },
+                    boxShadow: {
+                        'pop': '4px 4px 0px 0px rgba(0,0,0,1)',
+                        'pop-hover': '6px 6px 0px 0px rgba(0,0,0,1)',
+                        'pop-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        body {
+            background-color: #FFFBEB; /* Light Cream */
+            color: #18181B;
+        }
+        .text-stroke {
+            -webkit-text-stroke: 1px black;
+        }
+        .text-stroke-white {
+            -webkit-text-stroke: 4px white;
+            paint-order: stroke fill;
+        }
+        
+        /* Animation: Bouncing Bus */
+        @keyframes bounce-bus {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        .animate-bus {
+            animation: bounce-bus 2s infinite ease-in-out;
+        }
+
+        /* Animation: Float */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Chart Container Specifics */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white border-b-4 border-black px-4 py-3 flex justify-between items-center">
+        <div class="text-xl font-jua font-bold tracking-tighter">
+            DDI-WOONG <span class="text-dd-blue">CITY TOUR</span>
+        </div>
+        <button onclick="scrollToSection('outro')" class="bg-dd-blue text-white font-jua px-4 py-1 rounded-full border-2 border-black shadow-pop hover:shadow-pop-hover hover:-translate-y-0.5 transition-all text-sm">
+            구매하기 🚀
+        </button>
+    </nav>
+
+    <!-- SECTION 1: HERO -->
+    <header class="relative bg-dd-yellow overflow-hidden pt-12 pb-20 px-4 border-b-4 border-black">
+        <!-- Floating Elements -->
+        <div class="absolute top-10 left-[-20px] text-6xl opacity-20 rotate-12">☁️</div>
+        <div class="absolute bottom-10 right-[-20px] text-8xl opacity-20 -rotate-12">🎨</div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <!-- Badge -->
+            <div class="inline-block bg-white border-2 border-black rounded-full px-4 py-1 mb-4 shadow-pop-sm transform -rotate-2">
+                <span class="font-bold text-sm md:text-base">✍️ 실습형 전자책 + 디지털 키트</span>
+            </div>
+
+            <!-- Main Copy -->
+            <h1 class="font-jua text-5xl md:text-7xl leading-tight mb-6">
+                기록하는 순간,<br>
+                <span class="text-dd-blue text-stroke-white drop-shadow-md">여행은 비로소 완성! 📸</span>
+            </h1>
+
+            <!-- Sub Copy -->
+            <p class="text-lg md:text-xl font-medium mb-8 bg-white/80 inline-block px-4 py-2 rounded-lg border-2 border-black">
+                매일 지나치던 서울이 이렇게 귀여웠다고? 😲<br>
+                무심코 지나쳤던 골목이 <b>'글씨'</b>를 만나 힙한 그림으로 변신!
+            </p>
+
+            <!-- Bus Illustration (Emoji Composition) -->
+            <div class="animate-bus text-9xl mt-4 select-none cursor-default" title="띠웅 버스 출발!">
+                🚌💨
+            </div>
+            
+            <p class="mt-4 font-jua text-gray-700">#누적2.5억뷰 #아이패드필수템 #서울여행</p>
+        </div>
+    </header>
+
+    <!-- SECTION 2: CONCEPT -->
+    <section class="py-16 px-4 bg-white pattern-dots">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-jua text-3xl md:text-5xl mb-4">
+                글씨를 '그림'처럼!<br>
+                <span class="text-dd-pink underline decoration-wavy">몽글몽글 드로잉 ☁️</span>
+            </h2>
+            
+            <p class="text-gray-600 mb-10 max-w-2xl mx-auto">
+                그림 실력? 그런 거 없어도 돼요! (진지)<br>
+                선이 좀 삐뚤어지면 어때요? 그게 더 느낌 있잖아요! (찡긋 😉)<br>
+                <b>이 책은 정답을 찾는 게 아니라, 당신만의 느낌을 찾는 책이니까요!</b>
+            </p>
+
+            <!-- Polaroid Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                <!-- Card 1 -->
+                <div class="bg-white p-4 pb-12 border-4 border-black shadow-pop transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+                    <div class="bg-gray-100 h-48 mb-4 border-2 border-dashed border-gray-300 flex items-center justify-center text-4xl">
+                        🛠️
+                    </div>
+                    <div class="font-jua text-xl">힙지로 갬성</div>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-4 pb-12 border-4 border-black shadow-pop transform rotate-2 hover:rotate-0 transition-transform duration-300 z-10">
+                    <div class="bg-gray-100 h-48 mb-4 border-2 border-dashed border-gray-300 flex items-center justify-center text-4xl">
+                        👽
+                    </div>
+                    <div class="font-jua text-xl">DDP 우주선</div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-4 pb-12 border-4 border-black shadow-pop transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+                    <div class="bg-gray-100 h-48 mb-4 border-2 border-dashed border-gray-300 flex items-center justify-center text-4xl">
+                        ⛩️
+                    </div>
+                    <div class="font-jua text-xl">광화문 지붕</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: MAP (Interactive Chart.js) -->
+    <section class="py-16 px-4 bg-blue-50 border-t-4 border-black">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="font-jua text-3xl md:text-4xl mb-2">서울 핫플 10곳, 내 손으로 도장 깨기! 👊</h2>
+                <p class="text-sm bg-blue-100 inline-block px-3 py-1 rounded-full border border-blue-300">👇 지도의 핀을 클릭해서 코스 정보를 확인하세요!</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <!-- Chart Container -->
+                <div class="w-full md:w-2/3">
+                    <div class="chart-container bg-white rounded-3xl border-4 border-black shadow-pop p-4">
+                        <canvas id="seoulMapChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Info Card (Dynamic) -->
+                <div class="w-full md:w-1/3">
+                    <div id="locationInfo" class="bg-white p-6 rounded-2xl border-4 border-black shadow-pop h-full flex flex-col justify-center items-center text-center transition-all duration-300">
+                        <div class="text-6xl mb-4 animate-bounce">📍</div>
+                        <h3 class="font-jua text-2xl mb-2">어디로 떠날까요?</h3>
+                        <p class="text-gray-500">지도 위의 핀을 눌러보세요!<br>띠웅의 추천 코스가 나옵니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: PRODUCT KIT -->
+    <section class="py-16 px-4 bg-dd-yellow border-t-4 border-black relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="font-jua text-3xl md:text-5xl mb-4 bg-white inline-block px-4 py-2 border-4 border-black shadow-pop transform -rotate-1">
+                    🎁 띠웅의 보물창고 개방!
+                </h2>
+                <p class="mt-4 font-bold text-lg">종이책 PDF 아님! 🙅‍♀️ 바로 그리는 '찐' 실습템!</p>
+            </div>
+
+            <!-- Unboxing Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Item 1 -->
+                <div class="bg-white p-4 rounded-xl border-4 border-black shadow-pop text-center group hover:-translate-y-2 transition-transform">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">📖</div>
+                    <div class="font-bold text-xl font-jua">40P</div>
+                    <div class="text-xs text-gray-500">실습형 가이드북</div>
+                </div>
+                <!-- Item 2 -->
+                <div class="bg-white p-4 rounded-xl border-4 border-black shadow-pop text-center group hover:-translate-y-2 transition-transform">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🖌️</div>
+                    <div class="font-bold text-xl font-jua">19종</div>
+                    <div class="text-xs text-gray-500">치트키 브러시</div>
+                </div>
+                <!-- Item 3 -->
+                <div class="bg-white p-4 rounded-xl border-4 border-black shadow-pop text-center group hover:-translate-y-2 transition-transform">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🎨</div>
+                    <div class="font-bold text-xl font-jua">10종</div>
+                    <div class="text-xs text-gray-500">깔맞춤 팔레트</div>
+                </div>
+                <!-- Item 4 -->
+                <div class="bg-white p-4 rounded-xl border-4 border-black shadow-pop text-center group hover:-translate-y-2 transition-transform">
+                    <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">📜</div>
+                    <div class="font-bold text-xl font-jua">100%</div>
+                    <div class="text-xs text-gray-500">리얼 캔버스 질감</div>
+                </div>
+            </div>
+
+            <!-- Install Guide -->
+            <div class="mt-12 bg-white/50 p-6 rounded-2xl border-2 border-dashed border-black text-center">
+                <h3 class="font-jua text-xl mb-4">⚡ 3초 컷 설치 방법</h3>
+                <div class="flex justify-center items-center gap-2 md:gap-8 text-sm md:text-base font-bold">
+                    <span>⬇️ ZIP 다운</span>
+                    <span>→</span>
+                    <span>📂 압축 해제</span>
+                    <span>→</span>
+                    <span>✨ 자동 등록!</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: TUTORIAL -->
+    <section class="py-16 px-4 bg-white border-t-4 border-black">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="font-jua text-3xl md:text-4xl text-center mb-8">
+                15분 컷! 띠웅의<br>'떠먹여 주는' 튜토리얼 🥄
+            </h2>
+
+            <!-- Interactive Steps Tab -->
+            <div class="bg-gray-100 rounded-3xl p-2 border-4 border-black">
+                <div class="flex gap-2 mb-4">
+                    <button onclick="setStep(1)" id="btn-step-1" class="flex-1 py-3 font-jua rounded-xl border-2 border-transparent bg-dd-blue text-white shadow-pop-sm transition-all">STEP 1</button>
+                    <button onclick="setStep(2)" id="btn-step-2" class="flex-1 py-3 font-jua rounded-xl border-2 border-transparent bg-white hover:bg-gray-200 transition-all">STEP 2</button>
+                    <button onclick="setStep(3)" id="btn-step-3" class="flex-1 py-3 font-jua rounded-xl border-2 border-transparent bg-white hover:bg-gray-200 transition-all">STEP 3</button>
+                </div>
+
+                <div class="bg-white rounded-2xl border-2 border-black p-6 md:p-10 min-h-[300px] flex flex-col md:flex-row items-center gap-8">
+                    <!-- Dynamic Content -->
+                    <div id="step-image" class="w-full md:w-1/2 h-48 md:h-64 bg-gray-200 rounded-xl flex items-center justify-center text-6xl border-2 border-dashed border-gray-400">
+                        🗺️
+                    </div>
+                    <div class="w-full md:w-1/2 text-left">
+                        <h3 id="step-title" class="font-jua text-2xl mb-4 text-dd-blue">Layer Guide</h3>
+                        <p id="step-desc" class="text-lg leading-relaxed">
+                            "망칠 걱정 NO!<br>
+                            레이어 지도 보고 층층이 쌓기만 하면 돼요.<br>
+                            밑그림부터 채색까지 순서대로 착착!"
+                        </p>
+                        <div class="mt-4 bg-yellow-100 inline-block px-3 py-1 rounded text-sm font-bold border border-yellow-300">
+                            💡 띠웅쌤 Tip: "레이어 순서가 생명!"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: QUICK TIPS -->
+    <section class="py-16 px-4 bg-dd-pink/10 border-t-4 border-black">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-10">
+                <div class="text-4xl mb-2">🚨</div>
+                <h2 class="font-jua text-3xl">초보가 막히는 순간? 다~ 준비했죠!</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Tip 1 -->
+                <div class="bg-white p-6 rounded-2xl border-2 border-black shadow-pop-sm">
+                    <div class="font-jua text-xl mb-2 text-dd-blue">📱 Split View</div>
+                    <p class="text-sm">"왔다 갔다 하지 마세요! 화면 반반 띄워두고 PDF 보면서 바로 그려요."</p>
+                </div>
+                <!-- Tip 2 -->
+                <div class="bg-white p-6 rounded-2xl border-2 border-black shadow-pop-sm">
+                    <div class="font-jua text-xl mb-2 text-dd-pink">🔒 클리핑 마스크</div>
+                    <p class="text-sm">"색 삐져나감 방지! 초보자가 가장 신기해하는 마법 기능 완전 정복."</p>
+                </div>
+                <!-- Tip 3 -->
+                <div class="bg-white p-6 rounded-2xl border-2 border-black shadow-pop-sm">
+                    <div class="font-jua text-xl mb-2 text-dd-yellow bg-black/5 inline-block px-1">✌️ 제스처</div>
+                    <p class="text-sm">"실수해도 괜찮아! 두 손가락 탭탭(Undo)이면 1초 만에 복구!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: OUTRO -->
+    <footer id="outro" class="py-20 px-4 bg-gradient-to-b from-blue-100 to-orange-100 border-t-4 border-black text-center">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="font-jua text-3xl md:text-5xl mb-6">
+                이 책을 덮을 때쯤,<br>
+                당신의 도시는 무슨 색일까요? 🌈
+            </h2>
+            <p class="text-lg mb-10 font-medium text-gray-700">
+                무채색이었던 서울이 조금 더 다정해 보이는 마법.<br>
+                지금 바로 아이패드를 켜세요.<br>
+                당신의 서울 산책은 이제부터 시작이니까요!
+            </p>
+            
+            <button class="font-jua text-2xl bg-dd-blue text-white px-8 py-4 rounded-full border-4 border-black shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none">
+                🚀 지금 서울 한바퀴 떠나기
+            </button>
+            <p class="mt-4 text-sm text-gray-500">2026년 봄, 띠웅 드림.</p>
+        </div>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        // --- 1. Interactive Map Logic (Chart.js) ---
+        const ctx = document.getElementById('seoulMapChart').getContext('2d');
+        
+        // Approximate visual coordinates for Seoul locations (North of river vs South)
+        // X: 0 (West) to 100 (East), Y: 0 (South) to 100 (North)
+        const locationData = [
+            { x: 50, y: 75, label: '북촌', icon: '🏡', detail: '단아한 전통의 결 (★★★)', type: 'Classic' },
+            { x: 42, y: 68, label: '광화문', icon: '⛩️', detail: '단청과 위엄 (★★★★★)', type: 'Classic' },
+            { x: 55, y: 65, label: '철물점', icon: '🛠️', detail: '힙지로 빈티지 무드 (★★★)', type: 'Retro' },
+            { x: 48, y: 60, label: '명동', icon: '✨', detail: '네온사인의 에너지 (★★)', type: 'Classic' },
+            { x: 60, y: 68, label: '광장시장', icon: '🔥', detail: '정겨움과 생동감 (★★★)', type: 'Retro' },
+            { x: 75, y: 70, label: '문구완구', icon: '🧸', detail: '동심 폭발 컬러 (★★★★★)', type: 'Retro' },
+            { x: 35, y: 55, label: '서울역', icon: '🚆', detail: '여행의 시작과 끝 (★★★)', type: 'Modern' },
+            { x: 50, y: 45, label: '남산타워', icon: '🌙', detail: '밤하늘 실루엣 (★★)', type: 'Modern' },
+            { x: 70, y: 60, label: 'DDP', icon: '👽', detail: '미래적인 곡선 (★★★)', type: 'Modern' },
+            { x: 85, y: 25, label: '별마당', icon: '📚', detail: '지적인 무드 (★★★★)', type: 'Modern' },
+        ];
+
+        const mapChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Seoul Spots',
+                    data: locationData,
+                    backgroundColor: '#3B82F6', // dd-blue
+                    borderColor: '#000',
+                    borderWidth: 2,
+                    pointRadius: 12,
+                    pointHoverRadius: 15,
+                    pointStyle: 'circle'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { display: false, min: 0, max: 100 },
+                    y: { display: false, min: 0, max: 100 }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#000',
+                        titleFont: { family: 'Jua', size: 14 },
+                        bodyFont: { family: 'Noto Sans KR' },
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw.label;
+                            }
+                        }
+                    }
+                },
+                onClick: (e, activeEls) => {
+                    if (activeEls.length > 0) {
+                        const index = activeEls[0].index;
+                        const place = locationData[index];
+                        updateLocationInfo(place);
+                    }
+                }
+            }
+        });
+
+        // Update Info Card on Click
+        function updateLocationInfo(place) {
+            const card = document.getElementById('locationInfo');
+            const colorClass = place.type === 'Retro' ? 'text-yellow-500' : (place.type === 'Classic' ? 'text-blue-500' : 'text-pink-500');
+            
+            card.innerHTML = `
+                <div class="text-6xl mb-4 animate-bounce">${place.icon}</div>
+                <h3 class="font-jua text-3xl mb-2 ${colorClass}">${place.label}</h3>
+                <p class="font-bold text-gray-800 text-lg mb-1">${place.type} Seoul</p>
+                <p class="text-gray-600 bg-gray-100 px-3 py-1 rounded-lg border border-black">${place.detail}</p>
+            `;
+        }
+
+        // --- 2. Tutorial Tab Logic ---
+        const stepData = {
+            1: {
+                title: "Layer Guide",
+                desc: "\"레이어 지도 보고 층층이 쌓고!<br>밑그림은 1층, 채색은 2층!<br>순서만 지키면 절대 망하지 않아요.\"",
+                icon: "🗺️",
+                tip: "💡 Tip: 종이 인형 옷 입히기랑 똑같아요!"
+            },
+            2: {
+                title: "Exact Settings",
+                desc: "\"브러시 크기? 색상 번호?<br>고민하지 마세요. 다~ 알려드림!<br>그대로 입력만 하면 띠웅 느낌 완성!\"",
+                icon: "⚙️",
+                tip: "💡 Tip: 팔레트에서 스포이드로 콕! 찍으세요."
+            },
+            3: {
+                title: "Finishing",
+                desc: "\"쓱싹 칠하면 완성! 참 쉽죠?<br>마지막에 종이 질감 레이어만 켜주면<br>아날로그 감성 200% 충전!\"",
+                icon: "✨",
+                tip: "💡 Tip: 선 밖으로 튀어나간 건 쿨하게 두세요. 그게 힙!"
+            }
+        };
+
+        function setStep(stepNum) {
+            // Reset Buttons
+            [1, 2, 3].forEach(n => {
+                const btn = document.getElementById(`btn-step-${n}`);
+                if (n === stepNum) {
+                    btn.className = "flex-1 py-3 font-jua rounded-xl border-2 border-transparent bg-dd-blue text-white shadow-pop-sm transition-all";
+                } else {
+                    btn.className = "flex-1 py-3 font-jua rounded-xl border-2 border-transparent bg-white hover:bg-gray-200 transition-all";
+                }
+            });
+
+            // Update Content
+            const data = stepData[stepNum];
+            document.getElementById('step-image').innerHTML = data.icon;
+            document.getElementById('step-title').textContent = data.title;
+            document.getElementById('step-desc').innerHTML = data.desc;
+            document.querySelector('#step-desc + div').innerHTML = data.tip;
+        }
+
+        // --- 3. Smooth Scroll ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+    <!-- Placeholder Comments Required by Prompt -->
+    <!-- Chosen Palette: Vibrant Yellow (#FFEB3B) + Electric Blue (#3B82F6) + Black Stroke for Pop Art feel -->
+    <!-- Application Structure Plan: Single-page landing flow. Hero -> Concept -> Interactive Map (Discovery) -> Product Kit (Value) -> Tutorial (Simplicity) -> Tips -> CTA. Designed to reduce friction for drawing beginners. -->
+    <!-- Visualization & Content Choices: Used Chart.js Scatter plot for the map to allow interactive discovery of locations without using heavy SVG files. Used DOM manipulation for the Tutorial tabs to keep it lightweight. Emphasized 'Digital Kit' nature with unboxing-style layout. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+</body>
+</html>
